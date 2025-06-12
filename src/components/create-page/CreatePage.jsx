@@ -50,7 +50,7 @@ export default function CreatePage() {
         setMessage("খালি প্রোম্পট রাখলে ছবি জেনারেট হবে না");
         return;
       }
-      setMessage("ইমেজ জেনারেট হচ্ছে...");
+      setMessage("কিছুক্ষণ অপেক্ষা করুন। ইমেজ জেনারেট হচ্ছে...");
 
       setImages(() =>
         Array(9)

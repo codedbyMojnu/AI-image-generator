@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-export default function Header({ setActivePage }) {
-  const [activeCreate, setActiveCreate] = useState(true);
-  const [activeDownload, setActiveDownload] = useState(false);
+export default function Header({ activePage, setActivePage }) {
   return (
     <header className="flex items-center mb-12 justify-between">
       <div className="flex items-center">
@@ -11,12 +7,9 @@ export default function Header({ setActivePage }) {
       <ul className="ml-4 text-sm text-zinc-400 flex gap-8">
         <a
           className={`hover:text-zinc-200 font-medium ${
-            activeCreate && "text-zinc-200 "
+            activePage === "create" && "text-zinc-200 "
           } cursor-pointer transition-all`}
           onClick={() => {
-            setActiveDownload(false);
-            setActiveCreate(true);
-
             setActivePage("create");
           }}
         >
@@ -24,11 +17,9 @@ export default function Header({ setActivePage }) {
         </a>
         <a
           className={`hover:text-zinc-200 font-medium ${
-            activeDownload && "text-zinc-200 "
+            activePage === "download" && "text-zinc-200 "
           } cursor-pointer transition-all`}
           onClick={() => {
-            setActiveCreate(false);
-            setActiveDownload(true);
             setActivePage("download");
           }}
         >
