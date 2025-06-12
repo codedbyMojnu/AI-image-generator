@@ -14,9 +14,8 @@ export default function CreatePage() {
     width: "",
   });
   const [models, setModels] = useState([]);
+  const [message, setMessage] = useState("");
   const { images, setImages } = useImages("");
-
-  console.log(apiParameters, "All Parameterss");
 
   // Find models from polination api
   useEffect(() => {
@@ -42,80 +41,108 @@ export default function CreatePage() {
 
   // Function handle prompt submit
   async function handleSubmit() {
-    console.log("fetching start");
-    setImages(() =>
-      Array(9)
-        .fill(null)
-        .map(() => ({
-          src: "",
-          seed: 0,
-          loading: "Generating...",
-          error: "",
-        }))
-    );
-    for (let i = 0; i < 9; i++) {
-      const seed = getRandomNumber();
-      const url = `https://image.pollinations.ai/prompt/${apiParameters?.promptText}?width=${apiParameters?.width}&height=${apiParameters?.height}&seed=${seed}&model=${apiParameters?.model}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 16000);
+    setMessage("");
 
-      try {
-        const response = await fetch(url, {
-          signal: controller.signal, // ✅ অনুরোধ বাতিল করার জন্য
-        });
-        if (!response.ok) {
-          console.log("Fetching data failed");
+    if (apiParameters?.model == "gptimage") {
+      setMessage(`This selected Model  is for Paid User Only`);
+    } else {
+      setMessage("ইমেজ জেনারেট হচ্ছে...");
+      setApiParameters({
+        promptText: "",
+        model: "flux",
+        height: "",
+        width: "",
+      });
+
+      setImages(() =>
+        Array(9)
+          .fill(null)
+          .map(() => ({
+            src: "",
+            seed: 0,
+            loading: "Generating...",
+            error: "",
+          }))
+      );
+      for (let i = 0; i < 9; i++) {
+        const seed = getRandomNumber();
+        const url = `https://image.pollinations.ai/prompt/${apiParameters?.promptText}?width=${apiParameters?.width}&height=${apiParameters?.height}&seed=${seed}&model=${apiParameters?.model}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 16000);
+
+        try {
+          const response = await fetch(url, {
+            signal: controller.signal, // ✅ অনুরোধ বাতিল করার জন্য
+          });
+          if (!response.ok) {
+            console.log("Fetching data failed");
+            setImages((previous) => {
+              const newImages = [...previous];
+              newImages[i] = {
+                src: "",
+                seed,
+                loading: "",
+                error: "Image Generated Fail",
+              };
+              return newImages;
+            });
+          }
+          const data = await response.blob();
+          const imageURL = URL.createObjectURL(data);
+
+          setImages((previous) => {
+            const newImages = [...previous];
+            newImages[i] = { src: imageURL, seed, loading: "", error: "" };
+            return newImages;
+          });
+
+          // set to images state
+        } catch (err) {
           setImages((previous) => {
             const newImages = [...previous];
             newImages[i] = {
               src: "",
               seed,
               loading: "",
-              error: "Image Generated Fail",
+              error: err.message,
             };
             return newImages;
           });
+        } finally {
+          clearTimeout(timeoutId);
         }
-        const data = await response.blob();
-        const imageURL = URL.createObjectURL(data);
-
-        setImages((previous) => {
-          const newImages = [...previous];
-          newImages[i] = { src: imageURL, seed, loading: "", error: "" };
-          return newImages;
-        });
-
-        // set to images state
-      } catch (err) {
-        setImages((previous) => {
-          const newImages = [...previous];
-          newImages[i] = {
-            src: "",
-            seed,
-            loading: "",
-            error: err.message,
-          };
-          return newImages;
-        });
-      } finally {
-        clearTimeout(timeoutId);
       }
+      setMessage("ইমেজ জেনারেট শেষ হলো");
     }
   }
 
   return (
     <main className="relative z-10">
       <WelcomeMessage message=" Let's create a masterpiece, Alvian!" />
+      {message && !images[0].src && (
+        <p className="text-sm text-center text-red-500 mb-2 bg-white p-2">
+          নিচের দিক যান
+        </p>
+      )}
       <InputPrompt
         onSubmitted={handleSubmit}
         apiParameters={apiParameters}
         setApiParameters={setApiParameters}
       />
+      <p className="text-xs text-red-500 mt-[-20px] mb-2 ml-2">
+        একবার রিকুয়েস্ট দিলে, সেই অনুরোধ শেষ না হওয়া পর্যন্ত নতুন রিকুয়েস্ট দিলে
+        কাজ হবে না। সেই অনুরোধ শেষ হলেই কেবল নতুন রিকুয়েস্ট দিন। প্রত্যেক
+        রিকুয়েস্টে আমরা আপনাকে ৯ টি ছবি জেনারেট করে দেখাই।
+      </p>
       <AdvancedOptions
         models={models}
         setApiParameters={setApiParameters}
         apiParameters={apiParameters}
       />
+      <h3 className="text-zinc-200 mb-4 font-bold text-2xl text-center">
+        Result: <span className="text-gray-600">You can generate 9 images</span>
+      </h3>
+      {message && <p>{message}</p>}
       <DisplayImages />
     </main>
   );

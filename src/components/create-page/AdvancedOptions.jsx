@@ -7,15 +7,19 @@ export default function AdvancedOptions({
 }) {
   const { images } = useImages();
   function handleRatioClick(ratio) {
-    if (apiParameters?.height > 1 && apiParameters?.width > 1) {
-      if (apiParameters?.height >= apiParameters?.width) {
-        // Then height is a constant change width
-        const newWidth = Math.ceil(apiParameters?.height * ratio);
-        setApiParameters({ ...apiParameters, width: newWidth });
-      } else {
-        const newHeight = Math.ceil(apiParameters?.width / ratio);
-        setApiParameters({ ...apiParameters, height: newHeight });
-      }
+    switch (ratio) {
+      case "1:1":
+        setApiParameters({ ...apiParameters, height: 512, width: 512 });
+        break;
+      case "16:9":
+        setApiParameters({ ...apiParameters, height: 1280, width: 720 });
+        break;
+      case "4:3":
+        setApiParameters({ ...apiParameters, height: 1024, width: 768 });
+        break;
+      case "3:2":
+        setApiParameters({ ...apiParameters, height: 900, width: 600 });
+        break;
     }
   }
   return (
@@ -116,25 +120,25 @@ export default function AdvancedOptions({
           <div className="flex flex-wrap gap-2">
             <button
               className="bg-zinc-900/10  px-3 py-3 text-xs  hover:bg-zinc-800 rounded transition-colors cursor-pointer"
-              onClick={() => handleRatioClick(1 / 1)}
+              onClick={() => handleRatioClick("1:1")}
             >
               1:1
             </button>
             <button
               className="bg-zinc-900/10  px-3 py-3 text-xs  hover:bg-zinc-800 rounded transition-colors cursor-pointer"
-              onClick={() => handleRatioClick(16 / 9)}
+              onClick={() => handleRatioClick("16:9")}
             >
               16:9
             </button>
             <button
               className="bg-zinc-900/10  px-3 py-3 text-xs  hover:bg-zinc-800 rounded transition-colors cursor-pointer"
-              onClick={() => handleRatioClick(4 / 3)}
+              onClick={() => handleRatioClick("4:3")}
             >
               4:3
             </button>
             <button
               className="bg-zinc-900/10  px-3 py-3 text-xs  hover:bg-zinc-800 rounded transition-colors cursor-pointer"
-              onClick={() => handleRatioClick(3 / 2)}
+              onClick={() => handleRatioClick("3:2")}
             >
               3:2
             </button>

@@ -1,5 +1,5 @@
-import DisplayImages from "../create-page/DiplayImages";
 import WelcomeMessage from "../create-page/WelcomeMessage";
+import DownloadedImages from "./DownloadedImages";
 
 export default function DownloadPage() {
   return (
@@ -7,7 +7,7 @@ export default function DownloadPage() {
       <WelcomeMessage message="Downloaded" />
       {/* <!-- Display Dowloaded Images --> */}
       <div>
-        <DisplayImages />
+        <DownloadedImages />
       </div>
     </main>
   );
