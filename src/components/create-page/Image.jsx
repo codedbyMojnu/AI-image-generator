@@ -1,6 +1,7 @@
 import { useDownloadImages } from "../../context/DownloadImagesContext";
-import DownloadIcon from "../../Icons/downloadIcon";
+
 import blobUrlToBase64 from "../../utils/blob-url-to-base64";
+import DownloadIcon from "./../../Icons/DownloadIcon";
 
 export default function Image({ loading, error, src, seed }) {
   const { downloadImages, setDownloadImages } = useDownloadImages();

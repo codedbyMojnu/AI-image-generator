@@ -1,6 +1,6 @@
 import { useImages } from "../../context/ImagesContext";
-import SearchIcon from "../../Icons/searchIcon";
-import SubmitIcon from "../../Icons/SubmitIcon";
+import SearchIcon from "./../../Icons/SearchIcon";
+import SubmitIcon from "./../../Icons/SubmitIcon";
 
 export default function InputPrompt({
   apiParameters,
