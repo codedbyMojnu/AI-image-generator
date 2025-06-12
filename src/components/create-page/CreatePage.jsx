@@ -46,13 +46,11 @@ export default function CreatePage() {
     if (apiParameters?.model == "gptimage") {
       setMessage(`This selected Model  is for Paid User Only`);
     } else {
+      if (apiParameters?.promptText.trim() === "") {
+        setMessage("খালি প্রোম্পট রাখলে ছবি জেনারেট হবে না");
+        return;
+      }
       setMessage("ইমেজ জেনারেট হচ্ছে...");
-      setApiParameters({
-        promptText: "",
-        model: "flux",
-        height: "",
-        width: "",
-      });
 
       setImages(() =>
         Array(9)
@@ -109,6 +107,12 @@ export default function CreatePage() {
             return newImages;
           });
         } finally {
+          setApiParameters({
+            promptText: "",
+            model: "flux",
+            height: "",
+            width: "",
+          });
           clearTimeout(timeoutId);
         }
       }
@@ -121,7 +125,7 @@ export default function CreatePage() {
       <WelcomeMessage message=" Let's create a masterpiece, Alvian!" />
       {message && !images[0].src && (
         <p className="text-sm text-center text-red-500 mb-2 bg-white p-2 animate-bounce">
-          নিচের দিক যান 👇👇
+          নিচের দিক যান এবং নির্দেশনাগুলো ফলো করুন👇👇
         </p>
       )}
       <InputPrompt
@@ -142,7 +146,11 @@ export default function CreatePage() {
       <h3 className="text-zinc-200 mb-4 font-bold text-2xl text-center">
         Result: <span className="text-gray-600">You can generate 9 images</span>
       </h3>
-      {message && <p>{message}</p>}
+      {message && (
+        <p className="text-center border border-b-2 rounded-2xl p-2">
+          {message}
+        </p>
+      )}
       <DisplayImages />
     </main>
   );
