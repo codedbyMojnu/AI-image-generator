@@ -22,23 +22,26 @@ export default function InputPrompt({
             setApiParameters({ ...apiParameters, promptText: e.target.value })
           }
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              onSubmitted();
+            if (!isLoading) {
+              if (e.key === "Enter") {
+                onSubmitted();
+              }
             }
           }}
           type="text"
           placeholder="Create with Prompts"
           className="outline-none w-full py-4 px-2 bg-transparent text-white placeholder-zinc-400 text-lg"
         />
-        <button
-          className="bg-zinc-800 hover:bg-zinc-700 transition-colors p-4 mr-1 rounded-full cursor-pointer"
-          onClick={() => {
-            onSubmitted();
-          }}
-          disabled={isLoading}
-        >
-          <SubmitIcon />
-        </button>
+        {!isLoading && (
+          <button
+            className="bg-zinc-800 hover:bg-zinc-700 transition-colors p-4 mr-1 rounded-full cursor-pointer"
+            onClick={() => {
+              onSubmitted();
+            }}
+          >
+            <SubmitIcon />
+          </button>
+        )}
       </div>
     </div>
   );

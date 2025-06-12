@@ -120,8 +120,8 @@ export default function CreatePage() {
     <main className="relative z-10">
       <WelcomeMessage message=" Let's create a masterpiece, Alvian!" />
       {message && !images[0].src && (
-        <p className="text-sm text-center text-red-500 mb-2 bg-white p-2">
-          নিচের দিক যান
+        <p className="text-sm text-center text-red-500 mb-2 bg-white p-2 animate-bounce">
+          নিচের দিক যান 👇👇
         </p>
       )}
       <InputPrompt
